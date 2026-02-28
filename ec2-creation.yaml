@@ -6,7 +6,6 @@
     region: us-east-1
     group: default
     public_ip: true
-    name: ub-manage-node
     key_name: mykeypair
   tasks:
   - name: Create ec2 intances
