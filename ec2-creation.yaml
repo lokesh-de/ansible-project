@@ -1,0 +1,28 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    type: t3.micro
+    region: us-east-1
+    group: default
+    public_ip: true
+    name: ub-manage-node
+    key_name: mykeypair
+  tasks:
+  - name: Create ec2 intances
+    amazon.aws.ec2_instance:
+      name: "{{ item.name }}"
+      key_name: "{{ key_name }}"
+      instance_type: "{{ type }}"
+      security_group: "{{ group }}"
+      region: "{{ region }}"
+      aws_access_key: "{{ec2_access_key}}"  # From vault as defined
+      aws_secret_key: "{{ec2_secret_key}}"  # From vault as defined      
+      network:
+        assign_public_ip: true
+      image_id: "{{ item.image }}"
+      loop:
+       - {image: "ami-0f3caa1cf4417e51b", name: "manage-node-1"}
+       - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-2"}
+       - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-3"}
+       - {image: "ami-0220d79f3f480ecf5", name: "manage-node-4"}
