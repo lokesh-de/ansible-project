@@ -8,7 +8,7 @@
     group: default
     public_ip: true
     key_name: mykeypair
-    subnet_id: subnet-08164473fa277ebed
+    subnet_id: subnet-5ca1ab1e
 
   tasks:
 
@@ -22,12 +22,15 @@
       aws_access_key: "{{ ec2_access_key }}"
       aws_secret_key: "{{ ec2_secret_key }}"
 
+      image_id: "{{ item.image }}"
+
       vpc_subnet_id: "{{ subnet_id }}"
 
-      network_interfaces:
-        - assign_public_ip: "{{ public_ip }}"
+      network:
+        assign_public_ip: "{{ public_ip }}"
 
-      image_id: "{{ item.image }}"
+      state: present
+      wait: yes
 
     loop:
        - {image: "ami-0c02fb55956c7d316", name: "manage-node-1"}
