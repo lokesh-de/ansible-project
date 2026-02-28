@@ -1,6 +1,7 @@
 ---
 - hosts: localhost
   connection: local
+
   vars:
     type: t3.micro
     region: us-east-1
@@ -8,23 +9,28 @@
     public_ip: true
     key_name: mykeypair
     subnet_id: subnet-08164473fa277ebed
-  tasks:
-  - name: Create ec2 intances
-    amazon.aws.ec2_instance:
-      name: "{{ item.name }}"
-      key_name: "{{ key_name }}"
-      instance_type: "{{ type }}"
-      security_group: "{{ group }}"
-      region: "{{ region }}"
-      aws_access_key: "{{ec2_access_key}}"  # From vault as defined
-      aws_secret_key: "{{ec2_secret_key}}"  # From vault as defined      
-      network:
-        assign_public_ip: "{{ public_ip }}"
-        subnet_id: "{{ subnet_id }}"
 
-      image_id: "{{ item.image }}"
-    loop:
-       - {image: "ami-0f3caa1cf4417e51b", name: "manage-node-1"}
-       - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-2"}
-       - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-3"}
-       - {image: "ami-0220d79f3f480ecf5", name: "manage-node-4"}
+  tasks:
+    - name: Create ec2 instances
+      amazon.aws.ec2_instance:
+        name: "{{ item.name }}"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ type }}"
+        security_groups:
+          - "{{ group }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ ec2_access_key }}"
+        aws_secret_key: "{{ ec2_secret_key }}"
+
+        network:
+          - subnet_id: "{{ subnet_id }}"
+            assign_public_ip: "{{ public_ip }}"
+
+        image_id: "{{ item.image }}"
+        wait: yes
+
+      loop:
+        - { image: "ami-0f3caa1cf4417e51b", name: "manage-node-1" }
+        - { image: "ami-0b6c6ebed2801a5cb", name: "manage-node-2" }
+        - { image: "ami-0b6c6ebed2801a5cb", name: "manage-node-3" }
+        - { image: "ami-0220d79f3f480ecf5", name: "manage-node-4" }
