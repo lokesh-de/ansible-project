@@ -4,4 +4,5 @@
   tasks:
     - name: Shutdown ubuntu instances only
       ansible.builtin.command: /bin/shutdown -t now
-      when: ansible_user == "ubuntu"
+      when: 
+       ansible_facts['os_family'] == "Debian"
