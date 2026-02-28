@@ -20,7 +20,7 @@
       network:
         assign_public_ip: true
       image_id: "{{ item.image }}"
-      loop:
+    loop:
        - {image: "ami-0f3caa1cf4417e51b", name: "manage-node-1"}
        - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-2"}
        - {image: "ami-0b6c6ebed2801a5cb", name: "manage-node-3"}
