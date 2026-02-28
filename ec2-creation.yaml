@@ -6,7 +6,6 @@
     type: t3.micro
     region: us-east-1
     group: default
-    public_ip: true
     key_name: mykeypair
     subnet_id: subnet-08164473fa277ebed
 
@@ -16,17 +15,17 @@
         name: "{{ item.name }}"
         key_name: "{{ key_name }}"
         instance_type: "{{ type }}"
-        security_groups:
-          - "{{ group }}"
+        security_group: "{{ group }}"
         region: "{{ region }}"
         aws_access_key: "{{ ec2_access_key }}"
         aws_secret_key: "{{ ec2_secret_key }}"
 
-        network:
-          - subnet_id: "{{ subnet_id }}"
-            assign_public_ip: "{{ public_ip }}"
-
         image_id: "{{ item.image }}"
+
+        network:
+          subnet_id: "{{ subnet_id }}"
+          assign_public_ip: true
+
         wait: yes
 
       loop:
